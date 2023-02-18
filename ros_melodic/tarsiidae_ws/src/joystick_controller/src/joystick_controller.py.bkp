@@ -1,0 +1,73 @@
+import rospy
+#import roslib
+#import time
+#import serial
+#from sensor_msgs.msg import Joy
+#from rover_msgs.msg import JoyCtrl
+#import numpy as np
+
+""" 
+class JoystickController():
+    def __init__(self):
+
+        # Setting up buttons status
+        x_button_pressed = False;
+        run = True;
+
+        # Setting up a publisher
+        self.pub_ = rospy.Publisher("JoyCtrl", JoyCtrl)
+
+        # Setting up joystick subscriber
+        self.joy_sub_ = self.create_subscription(
+                Joy,
+                "joy",
+                self.joystick_callback,
+                10
+        )
+
+
+
+    def joystick_callback(self, msg):
+
+        # Reading button
+        
+
+
+
+
+        # Reading joystick positions
+        x_left = msg.axes[0]
+        y_left = msg.axes[1]
+        x_right = msg.axes[2]
+        y_right = msg.axes[3]
+
+        # Calculating forward speed, deadzone
+        if abs(y_right) < 0.1:
+            step = 0
+        else:
+            step = int(y_right * 63)
+
+        # Looking at turning
+        #if abs(x_right) < 0.1:
+        #    step = 0
+        #else:
+        #    step = int(x_right * 63)
+        
+        step_left = step
+        step_right = step
+        msg = JoyCtrl()
+        msg.LeftWheels = int8(step_left)
+        msg.RightWheels = int8(step_right)
+        msg.Run = self.run
+        self.pub_.publish(msg)
+
+
+
+"""
+def main(args=None):
+    rospy.init_node("joystick_controller")
+    #print("WTF")
+    #joy = JoystickController()
+
+if __name__ == "__main__":
+    main()
