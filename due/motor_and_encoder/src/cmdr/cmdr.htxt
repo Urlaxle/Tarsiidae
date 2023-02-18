@@ -1,0 +1,51 @@
+#ifndef CMDR_H__
+#define CMDR_H__
+
+#include <Arduino.h>
+
+typedef size_t (*cmdr_callback_t)(byte const *payload, void *context);
+
+struct cmdr_command {
+  char const *const cmd_string;
+  const cmdr_callback_t callback;
+  void *const context;
+  size_t num_matching;
+  bool cmd_received;
+};
+
+struct cmdr_list {
+    struct cmdr_command *const cmds;
+    size_t const len;
+};
+
+#define CMDR_COMMAND(_cmd, _cb, _ctx)                                         \
+  { .cmd_string = _cmd, .callback = _cb, .context = _ctx,                     \
+    .num_matching = 0, .cmd_received = false }
+
+#define CMDR_COMMAND_LIST(_name, ...)                                         \
+    static struct cmdr_command _name ## _commands[] = { __VA_ARGS__ };        \
+    static struct cmdr_list const _name = { .cmds = (_name ## _commands),     \
+    .len = (sizeof(_name ## _commands)/sizeof(struct cmdr_command)) }
+
+int cmdr_init(struct cmdr_list const *cmdr);
+
+void cmdr_process(struct cmdr_list const *cmdr, byte const *data, size_t len);
+
+#endif /* CMDR_H__ */
+
+/* Not done! May be that the macros don't work as intended... */
+
+/* Example of intended usage:
+CMDR_COMMAND_LIST(nano_commands,
+    CMDR_COMMAND("MOTOR_1", motor_1_handler, motor_ctx),
+    CMDR_COMMAND("MOTOR_2", motor_2_handler, motor_ctx),
+    CMDR_COMMAND("MOTOR_STOP", motor_stop_handler, motor_ctx),
+    CMDR_COMMAND("ENC_SEND", encoder_start_send_handler, encoder_ctx),
+    CMDR_COMMAND("ENC_STOP", encoder_stop_send_handler, encoder_ctx)
+);
+
+err = cmdr_init(&nano_commands);
+
+cmdr_process(&nano_commands, &data[0], sizeof(data));
+
+*/
